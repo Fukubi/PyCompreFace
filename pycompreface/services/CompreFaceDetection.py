@@ -4,6 +4,22 @@ from pycompreface.types.FaceDetectionResponse import FaceDetectionResponse
 
 
 class CompreFaceDetection:
+    """Use the Face Detection Service from CompreFace application in a host
+
+    Attributes:
+        api_key (str): The API key gotten from the CompreFace application for the FaceDetection
+        host (str): The complete hostname of the CompreFace application
+        limit (:obj:`int`, optional): The max number of faces to be detected (default is unlimited)
+        det_prob_threshold (:obj:`float`, optional): The threshold of the probability of it being a
+            face so it can be recognized as such (default is 0.7)
+        use_age_plugin (:obj:`bool`, optional): If the age plugin should be used (default is False)
+        use_gender_plugin (:obj:`bool`, optional): If the gender plugin should be used (default is False)
+        use_landmarks_plugin (:obj:`bool`, optional): If the landmarks plugin should be used (default is False)
+        use_calculator_plugin (:obj:`bool`, optional): If the calculator plugin should be used (default is False)
+        use_pose_plugin (:obj:`bool`, optional): If the pose plugin should be used (default is False)
+        use_mask_plugin (:obj:`bool`, optional): If the mask plugin should be used (default is False)
+    """
+
     api_key: str
     host: str
     limit: int
@@ -28,6 +44,22 @@ class CompreFaceDetection:
         use_pose_plugin: bool = False,
         use_mask_plugin: bool = False,
     ) -> None:
+        """Default constructor
+
+        Args:
+            api_key (str): The API key gotten from the CompreFace application for the FaceDetection
+            host (str): The complete hostname of the CompreFace application
+            limit (:obj:`int`, optional): The max number of faces to be detected (default is unlimited)
+            det_prob_threshold (:obj:`float`, optional): The threshold of the probability of it being a
+                face so it can be recognized as such (default is 0.7)
+            use_age_plugin (:obj:`bool`, optional): If the age plugin should be used (default is False)
+            use_gender_plugin (:obj:`bool`, optional): If the gender plugin should be used (default is False)
+            use_landmarks_plugin (:obj:`bool`, optional): If the landmarks plugin should be used (default is False)
+            use_calculator_plugin (:obj:`bool`, optional): If the calculator plugin should be used (default is False)
+            use_pose_plugin (:obj:`bool`, optional): If the pose plugin should be used (default is False)
+            use_mask_plugin (:obj:`bool`, optional): If the mask plugin should be used (default is False)
+        """
+
         self.api_key = api_key
         self.host = host
         self.limit = limit
@@ -40,6 +72,14 @@ class CompreFaceDetection:
         self.use_mask_plugin = use_mask_plugin
 
     def get_face_plugins(self) -> str:
+        """Generate the string for the query of the face plugins used
+
+        Returns:
+            str: The query string with the list of the face plugins used
+                ex: &face_plugins=age,gender,
+                Empty string if no plugins are used
+        """
+
         if (
             self.use_age_plugin
             or self.use_gender_plugin
@@ -67,6 +107,15 @@ class CompreFaceDetection:
             return ""
 
     def face_detection_image(self, image: str | bytes) -> FaceDetectionResponse:
+        """Detect faces from the image using the parameters from this class
+
+        Args:
+            image (str | bytes): The image filepath or the bytes of the image that the faces will be detected on
+
+        Returns:
+            FaceDetectionResponse: The detection and plugins result from the detection on the image above
+        """
+
         url_string = f"{self.host}/api/v1/detection/detect?limit={self.limit}&det_prob_threshold={self.det_prob_threshold}{self.get_face_plugins()}"
 
         if type(image) == str:
